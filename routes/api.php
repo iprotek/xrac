@@ -11,7 +11,7 @@ use iProtek\SmsSender\Http\Controllers\SmsClientApiRequestLinkController;
 //});
 Route::prefix('api')->middleware('api')->name('api')->group(function(){ 
 
-    Route::prefix('message')->name('.message')->group(function(){
+    Route::prefix('xrac')->name('.xrac')->group(function(){
 
       Route::prefix('group/{group_id}')->middleware(['pay.api'])->name('api')->group(function(){ 
           //FILE UPLOADS

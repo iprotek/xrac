@@ -14,7 +14,7 @@ Route::middleware(['web'])->group(function(){
  
     Route::middleware(['auth'])->prefix('manage')->name('manage')->group(function(){
         
-        Route::prefix('xrole')->name('.xrole')->group(function(){
+        Route::prefix('xrac')->name('.xrac')->group(function(){
 
             //MESSAGE CHAT NOTIFICATIONS 
 
