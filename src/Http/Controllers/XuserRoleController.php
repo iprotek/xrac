@@ -1,6 +1,6 @@
 <?php
 
-namespace iProtek\Core\Xrac\Controllers\Manage;
+namespace iProtek\Core\Xrac\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
