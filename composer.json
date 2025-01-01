@@ -10,7 +10,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "iProtek\\SmsSender\\": "src/"
+            "iProtek\\Xrac\\": "src/"
         }
     },
     "require": {
