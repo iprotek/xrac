@@ -23,7 +23,7 @@
 
 @section('foot') 
   <script>
-    ActivateMenu(['menu-company-details']);
+    ActivateMenu(['menu-user-roles']);
   </script>  
   <script src="/iprotek/js/manage/xrac/xrole.js"> </script>
 @endsection
