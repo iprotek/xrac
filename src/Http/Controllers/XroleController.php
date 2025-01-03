@@ -40,6 +40,7 @@ class XroleController extends _CommonOwnGroupController
 
         //GET DATA FROM SERVER
         $data = XracData::ApiXracBranches();
+        //return $data;
 
         if($data["status"] != 1){
             return ["status"=>0, "message"=>"Something goes wrong with the API"];
@@ -51,8 +52,8 @@ class XroleController extends _CommonOwnGroupController
         }
 
 
-        $local_branches = Branch::get();
         //COMPARE IF EXISTS THEN ADD IF POSSIBLE
+        $local_branches = Branch::withTrashed()->get();
         $local_branch_ids = $local_branches->pluck('id')->toArray();
 
         //ADDING FROM API TO LOCAL
@@ -60,12 +61,13 @@ class XroleController extends _CommonOwnGroupController
         foreach($api_branches as $api_branch){
             if(in_array($api_branch['local_branch_id'] *1, $api_diff_ids)){
                 //LOCAL DUE TO ID UPDATE
-                if(!Branch::find($api_branch['local_branch_id'])){
+                if(!Branch::withTrashed()->find($api_branch['local_branch_id'])){
                     \DB::table('branches')->insert([
                         "id"=>$api_branch['local_branch_id']*1,
                         "name"=>$api_branch['name'],
                         "is_active"=>$api_branch['is_active'],
-                        "group_id"=>"0"
+                        "group_id"=>"0",
+                        "deleted_at"=>$api_branch['deleted_at']
                     ]);
                 }
             }
@@ -78,8 +80,10 @@ class XroleController extends _CommonOwnGroupController
                 $result = XracData::ApiXracBranchAddUpdate([
                     "branch_id"=>$local_branch->id,
                     "name"=>$local_branch->name,
-                    "is_active"=>$local_branch->is_active
+                    "is_active"=>$local_branch->is_active,
+                    "deleted_at"=>$local_branch->deleted_at ? substr($local_branch->deleted_at, 0, 10) : null
                 ]);
+                //return $result;
             }
         }/**/
 
