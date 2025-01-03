@@ -81,7 +81,7 @@ class XroleController extends _CommonOwnGroupController
                     "branch_id"=>$local_branch->id,
                     "name"=>$local_branch->name,
                     "is_active"=>$local_branch->is_active,
-                    "deleted_at"=>$local_branch->deleted_at ? substr($local_branch->deleted_at, 0, 10) : null
+                    "deleted_at"=>$local_branch->deleted_at ? substr($local_branch->deleted_at, 0, 20) : null
                 ]);
                 //return $result;
             }
