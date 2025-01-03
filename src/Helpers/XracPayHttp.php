@@ -5,6 +5,8 @@ namespace iProtek\Xrac\Helpers;
 
 use iProtek\Core\Helpers\PayHttp;
 use iProtek\Core\Models\UserAdminPayAccount;
+use Illuminate\Support\Facades\Request;
+use iProtek\Core\Helpers\BranchSelectionHelper;
 
 
 class XracPayHttp
@@ -23,12 +25,24 @@ class XracPayHttp
     //AUTH 
 
     //CLIENT
-    public static function client($token=null){
+    public static function client($token=null, $pay_app_user_account_id = null){
         //Preparation of Headers
         $pay_url = config('iprotek.pay_url');
         $client_id = config('iprotek.pay_client_id');
         $client_secret = config('iprotek.pay_client_secret'); 
         $system_id = config('iprotek.system_id');
+        if(auth()->check()){
+            $branch_id = BranchSelectionHelper::get();
+        }else{
+            $branch_id = Request::query('branch_id'); 
+        }
+        $requestor_domain = Request::server('SERVER_NAME');
+        $requestor_port = Request::server('SERVER_PORT');
+        if(  !$requestor_port || $requestor_port == "80"){
+
+        }else{
+            $requestor_domain .= ":".$requestor_port;
+        }
  
 
         $proxy_id = 0;
@@ -37,6 +51,13 @@ class XracPayHttp
         if(auth()->check()){
             $user = auth()->user();
             $pay_account = \iProtek\Core\Models\UserAdminPayAccount::where('user_admin_id', $user->id)->first();
+            if( $pay_account ){ 
+                $proxy_id = $pay_account->own_proxy_group_id;
+                $pay_app_user_account_id = $pay_account->pay_app_user_account_id;
+                $token = $token ?: $pay_account->access_token;
+            }
+        }else if($pay_app_user_account_id){
+            $pay_account = \iProtek\Core\Models\UserAdminPayAccount::where('pay_app_user_account_id', $pay_app_user_account_id)->first();
             if( $pay_account ){ 
                 $proxy_id = $pay_account->own_proxy_group_id;
                 $pay_app_user_account_id = $pay_account->pay_app_user_account_id;
@@ -52,13 +73,14 @@ class XracPayHttp
             "SECRET"=>$client_secret,
             "PAY-URL"=>$pay_url,
             "SYSTEM-ID"=>$system_id,
+            "BRANCH-ID"=>$branch_id,
+            "REQUESTOR-DOMAIN"=>$requestor_domain,
             "SOURCE-URL"=>config('app.url'),
             "SOURCE-NAME"=>config('app.name'),
             "PAY-USER-ACCOUNT-ID"=>$pay_app_user_account_id."",
             "PAY-PROXY-ID"=>$proxy_id,
             "Authorization"=>"Bearer ".($token?:"")
-        ]; 
-
+        ];
         $client = new \GuzzleHttp\Client([
             'base_uri' => $pay_url,
             "http_errors"=>false, 
@@ -73,13 +95,13 @@ class XracPayHttp
     }
     
     public static function get_client( $url ){ 
+        //return PayHttp::get_client()
         //PRECHECKING
         $client = static::client(); 
-        $response = $client->get($url);
-        return $response;
+        return $client->get($url); 
     }
 
-    public static function post_client($url, $body, $raw_response = true){
+    public static function post_client($url, $body){
 
         if(is_array($body)){
             $body = json_encode($body);

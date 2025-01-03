@@ -13,6 +13,9 @@ Route::middleware(['web'])->group(function(){
             //ROLE 
             include(__DIR__.'/manage/xrole.php'); 
 
+            //BRANCH 
+            include(__DIR__.'/manage/branch.php'); 
+
 
         });
     });
