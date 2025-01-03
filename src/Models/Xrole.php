@@ -9,4 +9,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Xrole extends _CommonModel
 {
     use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        "name",
+        "title",
+        "description",
+        "app_id",
+
+        "user_type_id",
+        "priority_id",
+        "order_id",
+        "data",
+        "is_active",
+        "cstyle",
+
+        "group_id",
+        "pay_created_by",
+        "pay_updated_by",
+        "pay_deleted_by"
+    ];
 }

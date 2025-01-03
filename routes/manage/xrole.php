@@ -20,7 +20,8 @@ Route::prefix('xrole')->name('.xrole')->group(function(){
     */
 
     Route::get('/account-list', function(Request $request){
-        return  XracPayHttp::app_accounts("", 1, 10);
+        $page = $request->page ?: 1;
+        return  XracPayHttp::app_accounts($request->search, $page, 10);
     })->name('.account-list');
 
 });

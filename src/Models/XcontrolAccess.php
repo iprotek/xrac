@@ -12,6 +12,19 @@ class XcontrolAccess extends _CommonModel
 
 
     protected $fillable = [
-        ""
+        "xcontrol_id",
+        "name",
+        "title",
+        "description",
+        "order_id",
+        "app_id",
+        "data",
+        "is_active",
+        "cstyle",
+
+        "group_id",
+        "pay_created_by",
+        "pay_updated_by",
+        "pay_deleted_by"
     ];
 }

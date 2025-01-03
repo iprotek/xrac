@@ -16,7 +16,9 @@ class CreateXrolesTable extends Migration
         Schema::create('xroles', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name')->unique();
+            $table->string('name');
+            $table->string('title');
+        
             $table->text('description')->nullable();
             $table->integer('app_id')->nullable();
             //$table->integer('branch_id')->nullable();

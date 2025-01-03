@@ -13,6 +13,7 @@ class Xcontrol extends _CommonModel
 
     protected $fillable = [
         "name",
+        "title",
         "description",
         "app_id",
         "user_type_id",

@@ -17,6 +17,7 @@ class CreateXcontrolsTable extends Migration
             $table->id();
 
             $table->string('name')->unique();
+            $table->string('title');
             $table->text('description')->nullable();
             $table->integer('order_id')->default(0);
             $table->longText('data')->nullable();
