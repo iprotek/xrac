@@ -46,7 +46,7 @@ class XracPayHttp
  
 
         $proxy_id = 0;
-        $pay_app_user_account_id = 0;
+        $pay_app_user_account_id = PayHttp::pay_account_id();
         
         if(auth()->check()){
             $user = auth()->user();

@@ -61,13 +61,16 @@ class XroleController extends _CommonOwnGroupController
         foreach($api_branches as $api_branch){
             if(in_array($api_branch['local_branch_id'] *1, $api_diff_ids)){
                 //LOCAL DUE TO ID UPDATE
-                if(!Branch::withTrashed()->find($api_branch['local_branch_id'])){
+                if(!Branch::withTrashed()->find($api_branch['local_branch_id'])){ 
                     \DB::table('branches')->insert([
                         "id"=>$api_branch['local_branch_id']*1,
                         "name"=>$api_branch['name'],
                         "is_active"=>$api_branch['is_active'],
                         "group_id"=>"0",
-                        "deleted_at"=>$api_branch['deleted_at']
+                        "deleted_at"=> $api_branch['deleted_at'] ? substr($api_branch['deleted_at'], 0, 20) : null,
+                        "pay_created_by"=>$api_branch['created_pay_user_account_id'],
+                        "pay_updated_by"=>$api_branch['updated_pay_user_account_id'],
+                        "pay_deleted_by"=>$api_branch['deleted_pay_user_account_id']
                     ]);
                 }
             }
