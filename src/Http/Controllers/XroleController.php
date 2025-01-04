@@ -93,4 +93,81 @@ class XroleController extends _CommonOwnGroupController
         return ["status"=>1, "message"=>"Done syncing", "api_branch_ids"=>$api_branch_ids, "local_branch_ids"=>$local_branch_ids , "api_diffs"=>$api_diff_ids, "local_diffs"=>$local_diff_ids];
     }
 
+    public function sync_add(Request $request){
+
+        $data = $this->validate($request, [
+            "name"=>"required|unique:branches,name",
+            "is_active"=>"nullable",
+            "data"=>"nullable",
+            "address"=>"nullable"
+        ])->validated();
+
+        $data["group_id"] = 0;
+
+        $branch = Branch::create($data);
+
+
+        $result = XracData::ApiXracBranchAddUpdate([
+            "branch_id"=>$branch->id,
+            "name"=>$branch->name,
+            "is_active"=>$branch->is_active,
+            "deleted_at"=>$branch->deleted_at ? substr($branch->deleted_at, 0, 20) : null
+        ]);
+
+        return ["status"=>1, "message"=>"Branch added.", "branch"=>$branch];
+    }
+
+    public function sync_update(Request $request){
+
+        $data = $this->validate($request, [
+            "id"=>"required",
+            "name"=>"required|unique:branches,name,".$request->id,
+            "is_active"=>"nullable",
+            "data"=>"nullable",
+            "address"=>"nullable"
+        ])->validated();
+        
+        $data["group_id"] = 0;
+
+        $branch = Branch::find($data['id']);
+        if(!$branch){
+            return ["status"=>0, "message"=>"Branch not found." ]; 
+        }
+        $branch->update($data);
+
+        $result = XracData::ApiXracBranchAddUpdate([
+            "branch_id"=>$branch->id,
+            "name"=>$branch->name,
+            "is_active"=>$branch->is_active,
+            "deleted_at"=>$branch->deleted_at ? substr($branch->deleted_at, 0, 20) : null
+        ]);
+
+        return ["status"=>1, "message"=>"Branch updated."];
+    }
+
+    
+    public function sync_remove(Request $request){
+
+        $data = $this->validate($request, [
+            "id"=>"required"
+        ])->validated();
+
+        $branch = Branch::find($data['id']);
+        if(!$branch){
+            return ["status"=>0, "message"=>"Branch Not found"];
+        }
+        $branch->delete();
+        $trashBranch = Branch::withTrashed()->find($data['id']); 
+
+        //SYNC TO PAY
+        $result = XracData::ApiXracBranchAddUpdate([
+            "branch_id"=>$trashBranch->id,
+            "name"=>$trashBranch->name,
+            "is_active"=>$trashBranch->is_active,
+            "deleted_at"=>$trashBranch->deleted_at ? substr($branch->deleted_at, 0, 20) : null
+        ]); 
+
+        return ["status"=>1, "message"=>"Branch removed."];
+    }
+
 }
