@@ -7,6 +7,10 @@ use iProtek\Core\Helpers\PayHttp;
 
 Route::prefix('branch')->name('.branch')->group(function(){
 
+    Route::get('/active-list', [ XroleController::class, 'active_branch_list' ])->name('.branch-list');
+
+    Route::post('/select-branch', [ XroleController::class, 'select_branch' ])->name('.select-branch');
+
     Route::get('/list', [ XroleController::class, 'branch_list' ])->name('.branch-list');
 
     //SYNC BRANCHLIST

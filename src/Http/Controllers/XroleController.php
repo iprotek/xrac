@@ -8,6 +8,7 @@ use iProtek\Core\Http\Controllers\_Common\_CommonOwnGroupController;
 use iProtek\Core\Models\Branch;
 use iProtek\Xrac\Helpers\XracPayHttp;
 use iProtek\Xrac\Helpers\XracData;
+use iProtek\Core\Helpers\BranchSelectionHelper;
 
 class XroleController extends _CommonOwnGroupController
 {
@@ -18,6 +19,19 @@ class XroleController extends _CommonOwnGroupController
 
         return $this->view('iprotek_xrac::manage.xrole');
 
+    }
+
+    public function select_branch(Request $request){
+
+        //TODO:: Many need requirement such as permission on this metthod and also allowed branch which the user have access
+
+        if(!$request->branch_id){
+            return ["status"=>0, "message"=>"Successfully removed."];
+        }
+        $branch_id = $request->branch_id*1;
+
+        BranchSelectionHelper::set($branch_id);
+        return ["status"=>1,  "message"=>"Successfully Set Branch"];
     }
 
     public function user_role_access(Request $request){
@@ -34,6 +48,18 @@ class XroleController extends _CommonOwnGroupController
         }
 
         return $branches->paginate(10);
+    }
+
+    public function active_branch_list(Request $request){
+
+        $branches = Branch::on();
+        $branches->where('is_active', 1);
+        $selected_branch = BranchSelectionHelper::get();
+        return
+        [
+         "selected_id"=>$selected_branch,
+         "list"=>$branches->get()
+        ];
     }
 
     public function sync_branch_list(Request $request){
