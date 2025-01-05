@@ -56,20 +56,12 @@ class XroleController extends _CommonOwnGroupController
 
     public function active_branch_list(Request $request){
 
-        $branches = Branch::on();
-        $branches->where('is_active', 1);
         $selected_branch = BranchSelectionHelper::get();
-        if(BranchSelectionHelper::disable_multi_branch()){
-            //Constraint to no branch selection
-            //return ["status"=>0,  "message"=>"Branch Selection Disabled."];
-            $branches->where('id', 0);
-        }
-
         return
         [
             "disable_multi_branch"=>BranchSelectionHelper::disable_multi_branch(),
             "selected_id"=>$selected_branch,
-            "list"=>$branches->get()
+            "list"=> BranchSelectionHelper::disable_multi_branch() ? [] : BranchSelectionHelper::active_branches() //$branches->get()
         ];
     }
 
