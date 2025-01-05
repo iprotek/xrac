@@ -25,6 +25,10 @@ class XroleController extends _CommonOwnGroupController
 
         //TODO:: Many need requirement such as permission on this metthod and also allowed branch which the user have access
 
+        if(BranchSelectionHelper::disable_multi_branch()){
+            return ["status"=>0,  "message"=>"Branch Selection Disabled."];
+        }
+
         if(!$request->branch_id){
             return ["status"=>0, "message"=>"Successfully removed."];
         }
@@ -55,10 +59,17 @@ class XroleController extends _CommonOwnGroupController
         $branches = Branch::on();
         $branches->where('is_active', 1);
         $selected_branch = BranchSelectionHelper::get();
+        if(BranchSelectionHelper::disable_multi_branch()){
+            //Constraint to no branch selection
+            //return ["status"=>0,  "message"=>"Branch Selection Disabled."];
+            $branches->where('id', 0);
+        }
+
         return
         [
-         "selected_id"=>$selected_branch,
-         "list"=>$branches->get()
+            "disable_multi_branch"=>BranchSelectionHelper::disable_multi_branch(),
+            "selected_id"=>$selected_branch,
+            "list"=>$branches->get()
         ];
     }
 
