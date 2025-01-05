@@ -4,11 +4,10 @@ namespace iProtek\Xrac\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use iProtek\Core\Http\Controllers\_Common\_CommonOwnGroupController;
-use iProtek\Core\Models\Branch;
+use iProtek\Core\Http\Controllers\_Common\_CommonOwnGroupController; 
 use iProtek\Xrac\Helpers\XracPayHttp;
 use iProtek\Xrac\Helpers\XracData;
-use iProtek\Core\Helpers\BranchSelectionHelper;
+use iProtek\Xrac\Models\Xrole;
 
 class XroleController extends _CommonOwnGroupController
 {
@@ -20,158 +19,139 @@ class XroleController extends _CommonOwnGroupController
         return $this->view('iprotek_xrac::manage.xrole');
 
     }
+    public function active_role_list(Request $request){
 
-    public function select_branch(Request $request){
-
-        //TODO:: Many need requirement such as permission on this metthod and also allowed branch which the user have access
-
-        if(BranchSelectionHelper::disable_multi_branch()){
-            return ["status"=>0,  "message"=>"Branch Selection Disabled."];
-        }
-
-        if(!$request->branch_id){
-            return ["status"=>0, "message"=>"Successfully removed."];
-        }
-        $branch_id = $request->branch_id*1;
-
-        BranchSelectionHelper::set($branch_id);
-        return ["status"=>1,  "message"=>"Successfully Set Branch"];
+        $active_roles = Xrole::where('is_active', 1);
+        return
+        [
+            "list"=>  $active_roles->get()
+        ];
     }
-
+ 
     public function user_role_access(Request $request){
         return $this->view('iprotek_xrac::manage.xuser-role-access');
     }
 
-    public function branch_list(Request $request){
+    public function role_list(Request $request){
         
-        $branches = Branch::on();
-
-        if($request->search){
-            $search = '%'.str_replace(' ', '%', $request->search).'%';
-            $branches->whereRaw('name like ?', [$search]);
-        }
-
-        return $branches->paginate(10);
+        return Xrole::get();
     }
 
-    public function active_branch_list(Request $request){
 
-        $selected_branch = BranchSelectionHelper::get();
-        return
-        [
-            "disable_multi_branch"=>BranchSelectionHelper::disable_multi_branch(),
-            "selected_id"=>$selected_branch,
-            "list"=> BranchSelectionHelper::disable_multi_branch() ? [] : BranchSelectionHelper::active_branches() //$branches->get()
-        ];
-    }
-
-    public function sync_branch_list(Request $request){
+    public function sync_role_list(Request $request){
 
         //GET DATA FROM SERVER
-        $data = XracData::ApiXracBranches();
+        $data = XracData::ApiXracRoles();
         //return $data;
 
         if($data["status"] != 1){
             return ["status"=>0, "message"=>"Something goes wrong with the API"];
         }
-        $api_branches = $data["branches"];
-        $api_branch_ids = [];
-        foreach($api_branches as $api_br){
-            $api_branch_ids[] = $api_br['local_branch_id'];
+        $api_rolees = $data["roles"];
+        $api_role_ids = [];
+        foreach($api_rolees as $api_br){
+            $api_role_ids[] = $api_br['local_role_id'];
         }
 
 
         //COMPARE IF EXISTS THEN ADD IF POSSIBLE
-        $local_branches = Branch::withTrashed()->get();
-        $local_branch_ids = $local_branches->pluck('id')->toArray();
+        $local_roles = Xrole::withTrashed()->get();
+        $local_role_ids = $local_roles->pluck('id')->toArray();
 
         //ADDING FROM API TO LOCAL
-        $api_diff_ids = array_diff($api_branch_ids, $local_branch_ids);
-        foreach($api_branches as $api_branch){
-            if(in_array($api_branch['local_branch_id'] *1, $api_diff_ids)){
+        $api_diff_ids = array_diff($api_role_ids, $local_role_ids);
+        foreach($api_rolees as $api_role){
+            if(in_array($api_role['local_role_id'] *1, $api_diff_ids)){
                 //LOCAL DUE TO ID UPDATE
-                if(!Branch::withTrashed()->find($api_branch['local_branch_id'])){ 
-                    \DB::table('branches')->insert([
-                        "id"=>$api_branch['local_branch_id']*1,
-                        "name"=>$api_branch['name'],
-                        "is_active"=>$api_branch['is_active'],
+                if(!Xrole::withTrashed()->find($api_role['local_role_id'])){ 
+                    \DB::table('xroles')->insert([
+                        "id"=>$api_role['local_role_id']*1,
+                        "name"=>$api_role['name'],
+                        "is_active"=>$api_role['is_active'],
                         "group_id"=>"0",
-                        "deleted_at"=> $api_branch['deleted_at'] ? substr($api_branch['deleted_at'], 0, 20) : null,
-                        "pay_created_by"=>$api_branch['created_pay_user_account_id'],
-                        "pay_updated_by"=>$api_branch['updated_pay_user_account_id'],
-                        "pay_deleted_by"=>$api_branch['deleted_pay_user_account_id']
+                        "deleted_at"=> $api_role['deleted_at'] ? substr($api_role['deleted_at'], 0, 20) : null,
+                        "pay_created_by"=>$api_role['created_pay_user_account_id'],
+                        "pay_updated_by"=>$api_role['updated_pay_user_account_id'],
+                        "pay_deleted_by"=>$api_role['deleted_pay_user_account_id'],
+                        "data"=>$api_role['default_data']
                     ]);
                 }
             }
         }/**/
 
         //ADDING FROM LOCAL To API
-        $local_diff_ids = array_diff( $local_branch_ids, $api_branch_ids);
-        foreach($local_branches as $local_branch){
-            if( in_array($local_branch->id, $local_diff_ids) ){
-                $result = XracData::ApiXracBranchAddUpdate([
-                    "branch_id"=>$local_branch->id,
-                    "name"=>$local_branch->name,
-                    "is_active"=>$local_branch->is_active,
-                    "deleted_at"=>$local_branch->deleted_at ? substr($local_branch->deleted_at, 0, 20) : null
+        $local_diff_ids = array_diff( $local_role_ids, $api_role_ids);
+        foreach($local_roles as $local_role){
+            if( in_array($local_role->id, $local_diff_ids) ){
+                $result = XracData::ApiXracRoleAddUpdate([
+                    "role_id"=>$local_role->id,
+                    "name"=>$local_role->name,
+                    "is_active"=>$local_role->is_active,
+                    "deleted_at"=>$local_role->deleted_at ? substr($local_role->deleted_at, 0, 20) : null,
+                    "description"=>$local_role->description,
+                    "default_data"=>$local_role->data
                 ]);
-                //return $result;
+                return $result;
             }
         }/**/
 
-        return ["status"=>1, "message"=>"Done syncing", "api_branch_ids"=>$api_branch_ids, "local_branch_ids"=>$local_branch_ids , "api_diffs"=>$api_diff_ids, "local_diffs"=>$local_diff_ids];
+        return ["status"=>1, "message"=>"Done syncing", "api_role_ids"=>$api_role_ids, "local_role_ids"=>$local_role_ids , "api_diffs"=>$api_diff_ids, "local_diffs"=>$local_diff_ids];
     }
 
     public function sync_add(Request $request){
 
         $data = $this->validate($request, [
-            "name"=>"required|unique:branches,name",
+            "name"=>"required|unique:xroles,name",
             "is_active"=>"nullable",
             "data"=>"nullable",
-            "address"=>"nullable"
+            "address"=>"nullable",
+            "description"=>"nullable"
         ])->validated();
 
         $data["group_id"] = 0;
+        $data['title'] = $request->name;
 
-        $branch = Branch::create($data);
+        $role = Xrole::create($data);
 
 
-        $result = XracData::ApiXracBranchAddUpdate([
-            "branch_id"=>$branch->id,
-            "name"=>$branch->name,
-            "is_active"=>$branch->is_active,
-            "deleted_at"=>$branch->deleted_at ? substr($branch->deleted_at, 0, 20) : null
+        $result = XracData::ApiXracRoleAddUpdate([
+            "local_id"=>$role->id,
+            "name"=>$role->name,
+            "is_active"=>$role->is_active,
+            "deleted_at"=>$role->deleted_at ? substr($role->deleted_at, 0, 20) : null
         ]);
 
-        return ["status"=>1, "message"=>"Branch added.", "branch"=>$branch];
+        return ["status"=>1, "message"=>"Role added.", "role"=>$role];
     }
 
     public function sync_update(Request $request){
 
         $data = $this->validate($request, [
             "id"=>"required",
-            "name"=>"required|unique:branches,name,".$request->id,
+            "name"=>"required|unique:xroles,name,".$request->id,
             "is_active"=>"nullable",
             "data"=>"nullable",
             "address"=>"nullable"
         ])->validated();
         
         $data["group_id"] = 0;
+        $data['title'] = $request->name;
 
-        $branch = Branch::find($data['id']);
-        if(!$branch){
-            return ["status"=>0, "message"=>"Branch not found." ]; 
+        $role = Xrole::find($data['id']);
+        if(!$role){
+            return ["status"=>0, "message"=>"Role not found." ]; 
         }
-        $branch->update($data);
+        $role->update($data);
 
-        $result = XracData::ApiXracBranchAddUpdate([
-            "branch_id"=>$branch->id,
-            "name"=>$branch->name,
-            "is_active"=>$branch->is_active,
-            "deleted_at"=>$branch->deleted_at ? substr($branch->deleted_at, 0, 20) : null
+        $result = XracData::ApiXracRoleAddUpdate([
+            "role_id"=>$role->id,
+            "name"=>$role->name,
+            "is_active"=>$role->is_active,
+            "deleted_at"=>$role->deleted_at ? substr($role->deleted_at, 0, 20) : null,
+            "default_data"=>$role->data,
+            "description"=>$role->description
         ]);
-
-        return ["status"=>1, "message"=>"Branch updated."];
+        return ["status"=>1, "message"=>"Role updated."];
     }
 
     
@@ -181,22 +161,25 @@ class XroleController extends _CommonOwnGroupController
             "id"=>"required"
         ])->validated();
 
-        $branch = Branch::find($data['id']);
-        if(!$branch){
-            return ["status"=>0, "message"=>"Branch Not found"];
+        $role = Xrole::find($data['id']);
+        if(!$role){
+            return ["status"=>0, "message"=>"Role Not found"];
         }
-        $branch->delete();
-        $trashBranch = Branch::withTrashed()->find($data['id']); 
+        $role->delete();
+        $trashRole = Xrole::withTrashed()->find($data['id']); 
 
         //SYNC TO PAY
-        $result = XracData::ApiXracBranchAddUpdate([
-            "branch_id"=>$trashBranch->id,
-            "name"=>$trashBranch->name,
-            "is_active"=>$trashBranch->is_active,
-            "deleted_at"=>$trashBranch->deleted_at ? substr($branch->deleted_at, 0, 20) : null
+        $result = XracData::ApiXracRoleAddUpdate([
+            "role_id"=>$trashRole->id,
+            "name"=>$trashRole->name,
+            "is_active"=>$trashRole->is_active,
+            "deleted_at"=>$trashRole->deleted_at ? substr($role->deleted_at, 0, 20) : null,
+            "description"=>$trashRole->description,
+            "default_data"=>$trashRole->data
         ]); 
+        return $result;
 
-        return ["status"=>1, "message"=>"Branch removed."];
+        return ["status"=>1, "message"=>"Role removed."];
     }
 
 }
