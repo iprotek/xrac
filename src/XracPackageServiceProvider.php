@@ -31,6 +31,11 @@ class XracPackageServiceProvider extends ServiceProvider
             if($user->id == 1){
                 return true;
             }
+            //TODO:://Check if user has menu-xrole at systemmenu and check its role and its user
+
+
+
+
             return false;
         });
 
