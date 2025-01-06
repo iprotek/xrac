@@ -8,7 +8,7 @@ use iProtek\Core\Models\UserAdminPayAccount;
 use iProtek\Xrac\Helpers\XracPayHttp;
 
 
-class XracData
+class XracSyncData
 {
     public static function ApiXracBranches(){
         

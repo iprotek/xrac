@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use iProtek\Core\Http\Controllers\_Common\_CommonOwnGroupController; 
 use iProtek\Xrac\Helpers\XracPayHttp;
-use iProtek\Xrac\Helpers\XracData;
+use iProtek\Xrac\Helpers\XracSyncData;
 use iProtek\Xrac\Models\Xrole;
 
 class XroleController extends _CommonOwnGroupController
@@ -41,7 +41,7 @@ class XroleController extends _CommonOwnGroupController
     public function sync_role_list(Request $request){
 
         //GET DATA FROM SERVER
-        $data = XracData::ApiXracRoles();
+        $data = XracSyncData::ApiXracRoles();
         //return $data;
 
         if($data["status"] != 1){
@@ -83,7 +83,7 @@ class XroleController extends _CommonOwnGroupController
         $local_diff_ids = array_diff( $local_role_ids, $api_role_ids);
         foreach($local_roles as $local_role){
             if( in_array($local_role->id, $local_diff_ids) ){
-                $result = XracData::ApiXracRoleAddUpdate([
+                $result = XracSyncData::ApiXracRoleAddUpdate([
                     "role_id"=>$local_role->id,
                     "name"=>$local_role->name,
                     "is_active"=>$local_role->is_active,
@@ -114,7 +114,7 @@ class XroleController extends _CommonOwnGroupController
         $role = Xrole::create($data);
 
 
-        $result = XracData::ApiXracRoleAddUpdate([
+        $result = XracSyncData::ApiXracRoleAddUpdate([
             "local_id"=>$role->id,
             "name"=>$role->name,
             "is_active"=>$role->is_active,
@@ -143,7 +143,7 @@ class XroleController extends _CommonOwnGroupController
         }
         $role->update($data);
 
-        $result = XracData::ApiXracRoleAddUpdate([
+        $result = XracSyncData::ApiXracRoleAddUpdate([
             "role_id"=>$role->id,
             "name"=>$role->name,
             "is_active"=>$role->is_active,
@@ -169,7 +169,7 @@ class XroleController extends _CommonOwnGroupController
         $trashRole = Xrole::withTrashed()->find($data['id']); 
 
         //SYNC TO PAY
-        $result = XracData::ApiXracRoleAddUpdate([
+        $result = XracSyncData::ApiXracRoleAddUpdate([
             "role_id"=>$trashRole->id,
             "name"=>$trashRole->name,
             "is_active"=>$trashRole->is_active,

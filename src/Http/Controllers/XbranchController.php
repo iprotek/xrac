@@ -7,7 +7,7 @@ use Illuminate\Routing\Controller;
 use iProtek\Core\Http\Controllers\_Common\_CommonOwnGroupController;
 use iProtek\Core\Models\Branch;
 use iProtek\Xrac\Helpers\XracPayHttp;
-use iProtek\Xrac\Helpers\XracData;
+use iProtek\Xrac\Helpers\XracSyncData;
 use iProtek\Core\Helpers\BranchSelectionHelper;
 
 class XbranchController extends _CommonOwnGroupController
@@ -68,7 +68,7 @@ class XbranchController extends _CommonOwnGroupController
     public function sync_branch_list(Request $request){
 
         //GET DATA FROM SERVER
-        $data = XracData::ApiXracBranches();
+        $data = XracSyncData::ApiXracBranches();
         //return $data;
 
         if($data["status"] != 1){
@@ -109,7 +109,7 @@ class XbranchController extends _CommonOwnGroupController
         $local_diff_ids = array_diff( $local_branch_ids, $api_branch_ids);
         foreach($local_branches as $local_branch){
             if( in_array($local_branch->id, $local_diff_ids) ){
-                $result = XracData::ApiXracBranchAddUpdate([
+                $result = XracSyncData::ApiXracBranchAddUpdate([
                     "branch_id"=>$local_branch->id,
                     "name"=>$local_branch->name,
                     "is_active"=>$local_branch->is_active,
@@ -136,7 +136,7 @@ class XbranchController extends _CommonOwnGroupController
         $branch = Branch::create($data);
 
 
-        $result = XracData::ApiXracBranchAddUpdate([
+        $result = XracSyncData::ApiXracBranchAddUpdate([
             "branch_id"=>$branch->id,
             "name"=>$branch->name,
             "is_active"=>$branch->is_active,
@@ -164,7 +164,7 @@ class XbranchController extends _CommonOwnGroupController
         }
         $branch->update($data);
 
-        $result = XracData::ApiXracBranchAddUpdate([
+        $result = XracSyncData::ApiXracBranchAddUpdate([
             "branch_id"=>$branch->id,
             "name"=>$branch->name,
             "is_active"=>$branch->is_active,
@@ -189,7 +189,7 @@ class XbranchController extends _CommonOwnGroupController
         $trashBranch = Branch::withTrashed()->find($data['id']); 
 
         //SYNC TO PAY
-        $result = XracData::ApiXracBranchAddUpdate([
+        $result = XracSyncData::ApiXracBranchAddUpdate([
             "branch_id"=>$trashBranch->id,
             "name"=>$trashBranch->name,
             "is_active"=>$trashBranch->is_active,
