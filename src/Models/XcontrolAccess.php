@@ -27,4 +27,10 @@ class XcontrolAccess extends _CommonModel
         "pay_updated_by",
         "pay_deleted_by"
     ];
+
+    protected $casts = [
+        "is_active"=>"boolean"
+    ];
+
+
 }

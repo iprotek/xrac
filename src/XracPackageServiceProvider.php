@@ -3,6 +3,7 @@
 namespace iProtek\Xrac;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class XracPackageServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,19 @@ class XracPackageServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        //DEFINE GATES
+        
+        Gate::define('menu-xrole', function ($user) {
+            if($user->id == 1){
+                return true;
+            }
+            return false;
+        });
+
+
+
+
         // Bootstrap package services
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');

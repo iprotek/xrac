@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route; 
+use Illuminate\Support\Facades\Gate;
 
 include(__DIR__.'/api.php');
 
@@ -19,7 +20,33 @@ Route::middleware(['web'])->group(function(){
             
             //ROLE 
             include(__DIR__.'/manage/role.php'); 
+            /*
+            Route::middleware([])->get('/set-xrac',function(){
+                
+                return \iProtek\Xrac\Helpers\XracHelper::getControlAccess();
 
+                return \iProtek\Xrac\Helpers\XracHelper::setControlAccess([
+                    [
+                        "name"=>"name",
+                        "title"=>"Title",
+                        "description"=>"Desc",
+                        "accesses"=>[
+                            [
+                                "name"=>"Access1",
+                                "title"=>"Access Title",
+                                "description"=>"Access Description"
+                            ],
+                            [
+                                "name"=>"Access2",
+                                "title"=>"Access Title3",
+                                "description"=>"Access Description3"
+                            ]
+                        ]
+                    ]
+                ]);
+            })->name('.set-xrac');
+            /* */
+            
 
         });
     });

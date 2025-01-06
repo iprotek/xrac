@@ -31,5 +31,12 @@ class Xcontrol extends _CommonModel
 
     ];
 
+    protected $casts = [
+        "is_active"=>"boolean"
+    ];
+
+    public function accesses(){
+        return $this->hasMany(XcontrolAccess::class, 'xcontrol_id');
+    }
 
 }

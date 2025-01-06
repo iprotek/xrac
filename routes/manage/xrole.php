@@ -7,8 +7,8 @@ use iProtek\Core\Helpers\PayHttp;
 
 Route::prefix('xrole')->name('.xrole')->group(function(){
 
-    Route::get('/', [ XroleController::class, 'index' ])->name('.index');
-    Route::get('/user-role-access', [ XroleController::class, 'user_role_access' ])->name('.user-role-access');
+    Route::middleware(['can:menu-xrole'])->get('/', [ XroleController::class, 'index' ])->name('.index');
+    Route::middleware(['can:menu-xrole'])->get('/user-role-access', [ XroleController::class, 'user_role_access' ])->name('.user-role-access');
     Route::get('/shared-account-list', function(Request $request){
         return XracPayHttp::app_user_account("", 1, 10);
     })->name('.shared-account-list');
