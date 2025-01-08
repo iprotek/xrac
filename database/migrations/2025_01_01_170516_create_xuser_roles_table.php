@@ -17,7 +17,7 @@ class CreateXuserRolesTable extends Migration
             $table->id();
 
             
-            $table->integer('user_admin_id');
+            $table->integer('app_account_id');
             $table->integer('xrole_id');
             $table->boolean('is_default')->default(1); 
 

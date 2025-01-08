@@ -11,7 +11,7 @@ class XuserRole extends _CommonModel
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        "user_admin_id",
+        "app_account_id",
         "xrole_id",
         "is_default",
         "app_id",

@@ -17,7 +17,7 @@ class CreateXuserCustomRoleAccessesTable extends Migration
             $table->id();
 
             
-            $table->integer('user_admin_id');
+            $table->integer('app_account_id');
             $table->integer('xrole_id');
             $table->boolean('xcontrol_access_id'); 
             $table->integer('is_allow'); // 0-No, 1-Yes, 2-Request
