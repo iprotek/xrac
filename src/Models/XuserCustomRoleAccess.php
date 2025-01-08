@@ -27,4 +27,8 @@ class XuserCustomRoleAccess extends _CommonModel
         "pay_updated_by",
         "pay_deleted_by"
     ];
+    protected $casts = [
+        "is_active"=>"boolean",
+        "is_allow"=>"boolean"
+    ];
 }
