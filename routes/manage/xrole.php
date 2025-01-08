@@ -39,7 +39,7 @@ Route::prefix('xrole')->name('.xrole')->group(function(){
             $role_menus[] = [
                 "id"=>$menu->id,
                 "menu_text"=>$menu->menu_text,
-                "allowed"=>in_array(  $role_id ,$user_types)
+                "is_allowed"=>in_array(  $role_id ,$user_types)
             ];
 
         }

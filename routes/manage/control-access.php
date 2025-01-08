@@ -1,30 +1,23 @@
 <?php
-
-use Illuminate\Support\Facades\Route; 
-use Illuminate\Support\Facades\Gate;
-
-include(__DIR__.'/api.php');
-
-Route::middleware(['web'])->group(function(){
- 
-    Route::middleware(['auth'])->prefix('manage')->name('manage')->group(function(){
-        
-        Route::prefix('xrac')->name('.xrac')->group(function(){
-
-            //ROLE ACCESS
-            include(__DIR__.'/manage/xrole.php'); 
-
-            //BRANCH 
-            include(__DIR__.'/manage/branch.php'); 
-
-            
-            //ROLE 
-            include(__DIR__.'/manage/role.php'); 
+use iProtek\Xrac\Http\Controllers\XcontrolAccessController;
+use iProtek\Xrac\Http\Controllers\XcontrolAccessDefaultController;
+use Illuminate\Http\Request;
+use iProtek\Xrac\Helpers\XracPayHttp;
+use iProtek\Core\Helpers\PayHttp;
+use \iProtek\Xrac\Helpers\XracHelper;
 
 
-            
-            //ROLE CONTROL ACCESS 
-            include(__DIR__.'/manage/control-access.php'); 
+    Route::prefix('control-access')->name('.control-access')->group(function(){
+        Route::get('list', function(){ 
+            return XracHelper::getControlAccess();
+        })->name('.list');
+
+        Route::get('allowed-default-role-list/{role_id}', [XcontrolAccessDefaultController::class, 'allow_role_access_list'])->name('.role-list');
+
+        Route::post('update-default-role-access-list/{role_id}', [XcontrolAccessDefaultController::class, 'update_allow_role_access'])->name('.update-default-role-access-list');
+
+    });
+
             /*
             Route::middleware([])->get('/set-xrac',function(){
                 
@@ -51,9 +44,3 @@ Route::middleware(['web'])->group(function(){
                 ]);
             })->name('.set-xrac');
             /* */
-            
-
-        });
-    });
-  
-});
