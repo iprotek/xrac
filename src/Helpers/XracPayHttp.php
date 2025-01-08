@@ -5,6 +5,7 @@ namespace iProtek\Xrac\Helpers;
 
 use iProtek\Core\Helpers\PayHttp;
 use iProtek\Core\Models\UserAdminPayAccount;
+use iProtek\Core\Models\UserAdmin;
 use Illuminate\Support\Facades\Request;
 use iProtek\Core\Helpers\BranchSelectionHelper;
 
@@ -12,7 +13,14 @@ use iProtek\Core\Helpers\BranchSelectionHelper;
 class XracPayHttp
 {
     public static function app_accounts($search, $page=1, $items_per_page=10){
-        return PayHttp::app_accounts($search, $page, $items_per_page);
+        $pageData = PayHttp::app_accounts($search, $page, $items_per_page);
+
+        foreach($pageData['data'] as &$item){
+            //$item['sample'] = "";
+            $useradmin = UserAdmin::where('email', $item['email'])->first();
+            $item['superadmin'] = $useradmin && $useradmin->id == 1;
+        }
+        return $pageData;
     }
 
     public static function send_invitation($email, $role, $verify_password){
