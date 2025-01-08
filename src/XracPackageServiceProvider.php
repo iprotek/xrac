@@ -4,6 +4,10 @@ namespace iProtek\Xrac;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use iProtek\Core\Helpers\BranchSelectionHelper;
+use iProtek\Core\Helpers\PayHttp;
+use iProtek\Xrac\Models\XuserRole;
+use iProtek\Core\Helpers\UserMenuHelper;
 
 class XracPackageServiceProvider extends ServiceProvider
 {
@@ -31,10 +35,9 @@ class XracPackageServiceProvider extends ServiceProvider
             if($user->id == 1){
                 return true;
             }
-            //TODO:://Check if user has menu-xrole at systemmenu and check its role and its user
-
-
-
+            //TODO:://Check if user has menu-xrole at systemmenu and check its role and its user 
+            return UserMenuHelper::userHasMenu($user, 'menu-xrole');
+ 
 
             return false;
         });
