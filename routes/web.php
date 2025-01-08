@@ -19,12 +19,13 @@ Route::middleware(['web'])->group(function(){
 
             
             //ROLE 
-            include(__DIR__.'/manage/role.php'); 
-
-
+            include(__DIR__.'/manage/role.php');  
             
             //ROLE CONTROL ACCESS 
-            include(__DIR__.'/manage/control-access.php'); 
+            include(__DIR__.'/manage/control-access.php');  
+            
+            //ROLE CONTROL ACCESS 
+            include(__DIR__.'/manage/user-role.php'); 
             /*
             Route::middleware([])->get('/set-xrac',function(){
                 

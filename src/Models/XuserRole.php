@@ -19,10 +19,17 @@ class XuserRole extends _CommonModel
         "data",
         "is_active",
         "cstyle",
+        "is_allowed",
 
         "group_id",
         "pay_created_by",
         "pay_updated_by",
         "pay_deleted_by"
+    ];
+    
+    protected $casts = [
+        "is_active"=>"boolean",
+        "is_default"=>"boolean",
+        "is_allowed"=>"boolean"
     ];
 }

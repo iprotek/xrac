@@ -24,6 +24,7 @@ class CreateXuserRolesTable extends Migration
             
             $table->integer('app_id')->default(0);
             $table->integer('branch_id')->default(0);
+            $table->boolean('is_allowed')->default(0);
             $table->longText('data')->nullable();
             $table->boolean('is_active')->default(1);
             $table->longText('cstyle')->nullable();
