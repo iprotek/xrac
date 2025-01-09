@@ -8,6 +8,7 @@ use iProtek\Core\Helpers\BranchSelectionHelper;
 use iProtek\Core\Helpers\PayHttp;
 use iProtek\Xrac\Models\XuserRole;
 use iProtek\Core\Helpers\UserMenuHelper;
+use iProtek\Xrac\Helpers\XracHelper;
 
 class XracPackageServiceProvider extends ServiceProvider
 {
@@ -30,14 +31,10 @@ class XracPackageServiceProvider extends ServiceProvider
     {
 
         //DEFINE GATES
-        
-        Gate::define('menu-xrole', function ($user) {
-            if($user->id == 1){
-                return true;
-            }
-            // Check if user has menu-xrole at systemmenu and check its role and its user and in a specific branch
-            return UserMenuHelper::userHasMenu($user, 'menu-xrole');
-        });
+        XracHelper::setGates();
+
+        //DEFINE ROLES BASE ON XRAC
+
 
 
         // Bootstrap package services

@@ -3,7 +3,14 @@
 
 namespace iProtek\Xrac\Helpers;
 use iProtek\Xrac\Models\Xcontrol;
+use iProtek\Xrac\Models\XuserRole;
 use iProtek\Xrac\Models\XcontrolAccess;
+use iProtek\Xrac\Models\XcontrolAccessDefault;
+use iProtek\Xrac\Models\XuserCustomRoleAccess;
+use iProtek\Core\Helpers\UserMenuHelper;
+use Illuminate\Support\Facades\Gate;
+use iProtek\Core\Helpers\BranchSelectionHelper;
+use iProtek\Core\Helpers\PayHttp;
 
 
 class XracHelper
@@ -177,4 +184,87 @@ class XracHelper
     public static function getRoleControlAccess($role){
 
     }
+
+    public static function setGates(){
+        //MENU
+        Gate::define('menu-xrole', function ($user) {
+            if($user->id == 1){
+                return true;
+            }
+            // Check if user has menu-xrole at systemmenu and check its role and its user and in a specific branch
+            return UserMenuHelper::userHasMenu($user, 'menu-xrole');
+        });
+
+
+        //XRAC SETTINGS
+        $controlAccessList = static::getControlAccess();
+        foreach($controlAccessList as $control){
+
+            foreach($control->accesses as $access){
+                //PUT DEFINE
+                Gate::define($control->name.":".$access->name, function($user) use($control, $access){
+                    
+                    //CHECK IF USER IS ADMIN
+                    if($user->id == 1){
+                        return true;
+                    }
+
+                    //
+                    //GET CURRENT BRANCH
+                    $branch_id = BranchSelectionHelper::get();
+
+                    //GET CURRENT PAY_ACCOUNT_ID
+                    $app_account_id = PayHttp::pay_account_id();
+                
+                    //GET USER ROLE
+                    $userRole = XuserRole::where([
+                        "app_account_id"=>$app_account_id,
+                        "branch_id"=>$branch_id,
+                        "is_allowed"=>true
+                    ])->first();
+                    if($userRole){
+
+                        //CHECK USER ROLE IF DEFAULT?
+                        if($userRole->is_default){
+                            //GET BY ACCESS
+                            $defaultAccess = XcontrolAccessDefault::where([
+                                "xrole_id"=>$userRole->xrole_id,
+                                "xcontrol_access_id"=>$access->id,
+                                "is_allow"=>true
+                            ])->first();
+                            if($defaultAccess){
+                                return true;
+                            }
+
+                        }
+                        else{
+                            //TODO:: SHOULD HAVING MERGING FOR DEFAULT TO THOSE NON EXISTENT BUT ITS OKAY
+                            $customAccess = XuserCustomRoleAccess::where([
+                                "app_account_id"=>$app_account_id,
+                                "xrole_id"=>$userRole->xrole_id,
+                                "xcontrol_access_id"=>$access->id,
+                                "is_allow"=>true,
+                                "branch_id"=>$branch_id
+                            ])->first();
+                            if($customAccess){
+                                return true;
+                            }
+
+                        }
+
+                        return false;
+                    }
+                    return false;
+                });
+            }
+
+
+        }
+        
+
+    }
+
+
+
+
 }

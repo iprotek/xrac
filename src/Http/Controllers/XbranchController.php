@@ -9,6 +9,8 @@ use iProtek\Core\Models\Branch;
 use iProtek\Xrac\Helpers\XracPayHttp;
 use iProtek\Xrac\Helpers\XracSyncData;
 use iProtek\Core\Helpers\BranchSelectionHelper;
+use iProtek\Xrac\Models\XuserRole;
+use iProtek\Core\Helpers\PayHttp;
 
 class XbranchController extends _CommonOwnGroupController
 {
@@ -57,11 +59,16 @@ class XbranchController extends _CommonOwnGroupController
     public function active_branch_list(Request $request){
 
         $selected_branch = BranchSelectionHelper::get();
+
+        //GET CURRENT USER ACTIVE AND ALLOWED BRANCHES
+        $branches = BranchSelectionHelper::active_branches();
+
+
         return
         [
             "disable_multi_branch"=>BranchSelectionHelper::disable_multi_branch(),
             "selected_id"=>$selected_branch,
-            "list"=> BranchSelectionHelper::disable_multi_branch() ? [] : BranchSelectionHelper::active_branches() //$branches->get()
+            "list"=> BranchSelectionHelper::disable_multi_branch() ? [] : $branches, //$branches->get(),
         ];
     }
 

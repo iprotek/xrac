@@ -16,6 +16,14 @@ use \iProtek\Xrac\Helpers\XracHelper;
 
         Route::post('update-default-role-access-list/{role_id}', [XcontrolAccessDefaultController::class, 'update_allow_role_access'])->name('.update-default-role-access-list');
 
+        Route::get('check-gate/{access_name}', function(Request $request, $access_name){
+            return [
+                "name"=>$access_name,
+                "is_allow"=>auth()->user()->can($access_name)
+            ];
+
+        })->name('.gate-access');
+
     });
 
             /*
