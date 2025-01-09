@@ -63,9 +63,12 @@ class XbranchController extends _CommonOwnGroupController
         //GET CURRENT USER ACTIVE AND ALLOWED BRANCHES
         $branches = BranchSelectionHelper::active_branches();
 
+        $user = auth()->user();
+
 
         return
         [
+            "can_manage_branch"=>$user->can('menu-xrole'),
             "disable_multi_branch"=>BranchSelectionHelper::disable_multi_branch(),
             "selected_id"=>$selected_branch,
             "list"=> BranchSelectionHelper::disable_multi_branch() ? [] : $branches, //$branches->get(),
