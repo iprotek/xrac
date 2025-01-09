@@ -24,35 +24,8 @@ Route::middleware(['web'])->group(function(){
             //ROLE CONTROL ACCESS 
             include(__DIR__.'/manage/control-access.php');  
             
-            //ROLE CONTROL ACCESS 
+            //USER ROLE CONTROL ACCESS 
             include(__DIR__.'/manage/user-role.php'); 
-            /*
-            Route::middleware([])->get('/set-xrac',function(){
-                
-                return \iProtek\Xrac\Helpers\XracHelper::getControlAccess();
-
-                return \iProtek\Xrac\Helpers\XracHelper::setControlAccess([
-                    [
-                        "name"=>"name",
-                        "title"=>"Title",
-                        "description"=>"Desc",
-                        "accesses"=>[
-                            [
-                                "name"=>"Access1",
-                                "title"=>"Access Title",
-                                "description"=>"Access Description"
-                            ],
-                            [
-                                "name"=>"Access2",
-                                "title"=>"Access Title3",
-                                "description"=>"Access Description3"
-                            ]
-                        ]
-                    ]
-                ]);
-            })->name('.set-xrac');
-            /* */
-            
 
         });
     });
