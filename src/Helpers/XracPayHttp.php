@@ -6,6 +6,7 @@ namespace iProtek\Xrac\Helpers;
 use iProtek\Core\Helpers\PayHttp;
 use iProtek\Core\Models\UserAdminPayAccount;
 use iProtek\Core\Models\UserAdmin;
+use iProtek\Core\Models\Auths\Admin;
 use Illuminate\Support\Facades\Request;
 use iProtek\Core\Helpers\BranchSelectionHelper;
 
@@ -17,8 +18,8 @@ class XracPayHttp
 
         foreach($pageData['data'] as &$item){
             //$item['sample'] = "";
-            $useradmin = UserAdmin::where('email', $item['email'])->first();
-            $item['superadmin'] = $useradmin && $useradmin->id == 1;
+            $admin = Admin::where('email', $item['email'])->first();
+            $item['superadmin'] = $admin->can('super-admin');
         }
         return $pageData;
     }

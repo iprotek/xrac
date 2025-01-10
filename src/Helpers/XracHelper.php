@@ -188,7 +188,7 @@ class XracHelper
     public static function setGates(){
         //MENU
         Gate::define('menu-xrole', function ($user) {
-            if($user->id == 1){
+            if($user->can('super-admin')){
                 return true;
             }
             // Check if user has menu-xrole at systemmenu and check its role and its user and in a specific branch
@@ -205,7 +205,7 @@ class XracHelper
                 Gate::define($control->name.":".$access->name, function($user) use($control, $access){
                     
                     //CHECK IF USER IS ADMIN
-                    if($user->id == 1){
+                    if($user->can('superadmin')){
                         return true;
                     }
 
