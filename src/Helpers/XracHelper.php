@@ -11,6 +11,7 @@ use iProtek\Core\Helpers\UserMenuHelper;
 use Illuminate\Support\Facades\Gate;
 use iProtek\Core\Helpers\BranchSelectionHelper;
 use iProtek\Core\Helpers\PayHttp;
+use Illuminate\Support\Facades\Schema;
 
 
 class XracHelper
@@ -136,6 +137,9 @@ class XracHelper
     }
 
     public static function getControlAccess($name=null){
+        if (!Schema::hasTable('xcontrols')) {
+            return [];
+        }
         if(!$name)
             return Xcontrol::with(['accesses'])->orderBy('order_id', 'ASC')->get();
         return Xcontrol::where('name', $name)->with(['accesses'])->orderBy('order_id', 'ASC')->get();
