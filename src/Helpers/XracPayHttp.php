@@ -19,7 +19,11 @@ class XracPayHttp
         foreach($pageData['data'] as &$item){
             //$item['sample'] = "";
             $admin = Admin::where('email', $item['email'])->first();
-            $item['superadmin'] = $admin->can('super-admin');
+            if($admin){
+                $item['superadmin'] = $admin->can('super-admin');
+            }else{
+                $item['superadmin'] = false;
+            }
         }
         return $pageData;
     }
