@@ -17,7 +17,6 @@ class UpdateTableRemoveXControlAccessKey extends Migration
         //
         DB::select(" ALTER TABLE xcontrol_accesses DROP INDEX xcontrol_accesses_name_unique");
 
-
     }
 
     /**
