@@ -17,7 +17,7 @@ class CreateXcontrolAccessesTable extends Migration
             $table->id();
 
             $table->integer('xcontrol_id')->nullable();
-            $table->string('name')->unique();
+            $table->string('name');//->unique();
             $table->string('title');
             $table->text('description')->nullable();
             $table->integer('order_id')->default(0); 
