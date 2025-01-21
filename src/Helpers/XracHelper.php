@@ -57,6 +57,9 @@ class XracHelper
     public static function setControlAccess(array $array){
 
         //TODO::
+        if (!Schema::hasTable('xcontrols')) {
+            return ["status"=>0, "message"=>"No Table found"];
+        }
         
         //Segragating Controls
         foreach($array as $control){
