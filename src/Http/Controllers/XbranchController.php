@@ -53,6 +53,11 @@ class XbranchController extends _CommonOwnGroupController
             $branches->whereRaw('name like ?', [$search]);
         }
 
+        if($request->is_all == 'yes'){
+            $branches->where('is_active', 1);
+            return $branches->get();
+        }
+
         return $branches->paginate(10);
     }
 
