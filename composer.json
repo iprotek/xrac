@@ -31,6 +31,5 @@
                 "iProtek\\Xrac\\XracPackageServiceProvider"
             ]
         }
-    },
-    "version": "1.0.0" 
+    }
 }
