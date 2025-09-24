@@ -79,7 +79,8 @@ Route::prefix('xrole')->name('.xrole')->group(function(){
 
     Route::get('/account-list', function(Request $request){
         $page = $request->page ?: 1;
-        return  XracPayHttp::app_accounts($request->search, $page, 10);
+        $exact = $request->exact ?: "";
+        return  XracPayHttp::app_accounts($request->search, $page, 10, $exact);
     })->name('.account-list');
 
 });

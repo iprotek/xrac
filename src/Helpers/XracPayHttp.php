@@ -13,8 +13,8 @@ use iProtek\Core\Helpers\BranchSelectionHelper;
 
 class XracPayHttp
 {
-    public static function app_accounts($search, $page=1, $items_per_page=10){
-        $pageData = PayHttp::app_accounts($search, $page, $items_per_page);
+    public static function app_accounts($search, $page=1, $items_per_page=10, $exact=null){
+        $pageData = PayHttp::app_accounts($search, $page, $items_per_page, $exact ?: "");
 
         foreach($pageData['data'] as &$item){
             //$item['sample'] = "";
