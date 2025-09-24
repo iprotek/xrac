@@ -14,11 +14,22 @@ Route::prefix('api')->middleware('api')->name('api')->group(function(){
     Route::prefix('xrac')->name('.xrac')->group(function(){
 
       Route::prefix('group/{group_id}')->middleware(['pay.api'])->name('api')->group(function(){ 
-          //FILE UPLOADS
-          //include(__DIR__.'/api/file-upload.php');
+      
+        //BRANCH
+        //include(__DIR__.'/manage/branch.php'); 
+        
+        //CONTROL ACCESS
+        //include(__DIR__.'/manage/control-access.php'); 
 
-          //FILE UPLOADS
-          //include(__DIR__.'/api/meta-data.php'); 
+        //ROLE
+        //include(__DIR__.'/manage/role.php'); 
+
+        //USER ROLE
+        //include(__DIR__.'/manage/user-role.php'); 
+
+        //XROLE
+        include(__DIR__.'/manage/xrole.php'); 
+      
       });
 
     });
