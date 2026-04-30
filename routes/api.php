@@ -13,22 +13,22 @@ Route::prefix('api')->middleware('api')->name('api')->group(function(){
 
     Route::prefix('xrac')->name('.xrac')->group(function(){
 
-      Route::prefix('group/{group_id}')->middleware(['pay.api', 'policy.control'])->name('api')->group(function(){ 
+      Route::prefix('group/{group_id}')->middleware(['pay.api', 'policy.control'])->group(function(){ 
       
         //BRANCH
-        //include(__DIR__.'/manage/branch.php'); 
+        include(__DIR__.'/api/branch.php'); 
         
         //CONTROL ACCESS
-        //include(__DIR__.'/manage/control-access.php'); 
+        include(__DIR__.'/api/control-access.php'); 
 
         //ROLE
-        //include(__DIR__.'/manage/role.php'); 
+        include(__DIR__.'/api/role.php'); 
 
         //USER ROLE
-        //include(__DIR__.'/manage/user-role.php'); 
+        include(__DIR__.'/api/user-role.php'); 
 
         //XROLE
-        include(__DIR__.'/manage/xrole.php'); 
+        include(__DIR__.'/api/xrole.php'); 
       
       });
 

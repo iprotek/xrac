@@ -8,21 +8,40 @@ use \iProtek\Xrac\Helpers\XracHelper;
 
 
     Route::prefix('control-access')->name('.control-access')->group(function(){
-        Route::get('list', function(){ 
-            return XracHelper::getControlAccess();
-        })->name('.list');
+        Route::get('list',[
+            "uses"=>function(Request $request){ 
+                return XracHelper::getControlAccess();
+            },
+            "description"=>"List of control access",
+            "is_visible"=>false,
+            "is_allow"=>false
+        ])->name('.list');
 
-        Route::get('allowed-default-role-list/{role_id}', [XcontrolAccessDefaultController::class, 'allow_role_access_list'])->name('.role-list');
+        Route::get('allowed-default-role-list/{role_id}', [
+            "uses"=>[XcontrolAccessDefaultController::class, 'allow_role_access_list'],
+            "description"=>"Control Access that has Default allowed role list",
+            "is_visible"=>false,
+            "is_allow"=>false
+        ])->name('.role-list');
 
-        Route::post('update-default-role-access-list/{role_id}', [XcontrolAccessDefaultController::class, 'update_allow_role_access'])->name('.update-default-role-access-list');
+        Route::post('update-default-role-access-list/{role_id}', [
+            "uses"=>[XcontrolAccessDefaultController::class, 'update_allow_role_access'],
+            "description"=>"Update access control of the default role access list",
+            "is_visible"=>false,
+            "is_allow"=>false
+        ])->name('.update-default-role-access-list');
 
-        Route::get('check-gate/{access_name}', function(Request $request, $access_name){
-            return [
-                "name"=>$access_name,
-                "is_allow"=>auth()->user()->can($access_name)
-            ];
+        Route::get('check-gate/{access_name}', [ "uses"=>function(Request $request, $access_name){
+                return [
+                    "name"=>$access_name,
+                    "is_allow"=>auth()->user()->can($access_name)
+                ];
 
-        })->name('.gate-access');
+            },
+            "description"=>"Control Access gate checker",
+            "is_visible"=>false,
+            "is_allow"=>false
+        ])->name('.gate');
 
     });
 

@@ -12,20 +12,20 @@ Route::middleware(['web'])->group(function(){
         Route::prefix('xrac')->name('.xrac')->group(function(){
 
             //ROLE ACCESS
-            include(__DIR__.'/manage/xrole.php'); 
+            //include(__DIR__.'/manage/xrole.php'); 
 
             //BRANCH 
-            include(__DIR__.'/manage/branch.php'); 
+            //include(__DIR__.'/manage/branch.php'); 
 
             
             //ROLE 
-            include(__DIR__.'/manage/role.php');  
+            //include(__DIR__.'/manage/role.php');  
             
             //ROLE CONTROL ACCESS 
-            include(__DIR__.'/manage/control-access.php');  
+            //include(__DIR__.'/manage/control-access.php');  
             
             //USER ROLE CONTROL ACCESS 
-            include(__DIR__.'/manage/user-role.php'); 
+            //include(__DIR__.'/manage/user-role.php'); 
 
         });
     });
