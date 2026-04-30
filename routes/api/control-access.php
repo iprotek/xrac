@@ -8,39 +8,36 @@ use \iProtek\Xrac\Helpers\XracHelper;
 
 
     Route::prefix('control-access')->name('.control-access')->group(function(){
-        Route::get('list',[
-            "uses"=>function(Request $request){ 
+        Route::get('list', function(Request $request){ 
                 return XracHelper::getControlAccess();
-            },
-            "description"=>"List of control access",
-            "is_visible"=>true,
-            "is_allow"=>false
-        ])->name('.list');
+            })
+            ->defaults("_description", "List of control access")
+            ->defaults("_is_visible", true)
+            ->defaults("_is_allow", false)
+            ->name('.list');
 
-        Route::get('allowed-default-role-list/{role_id}', [
-            "uses"=>[XcontrolAccessDefaultController::class, 'allow_role_access_list'],
-            "description"=>"Control Access that has Default allowed role list",
-            "is_visible"=>true,
-            "is_allow"=>false
-        ])->name('.role-list');
+        Route::get('allowed-default-role-list/{role_id}', [XcontrolAccessDefaultController::class, 'allow_role_access_list'])
+            ->defaults("_description", "Control Access that has Default allowed role list")
+            ->defaults("_is_visible", true)
+            ->defaults("_is_allow", false)
+            ->name('.allowed-default-role-list');
 
-        Route::post('update-default-role-access-list/{role_id}', [
-            "uses"=>[XcontrolAccessDefaultController::class, 'update_allow_role_access'],
-            "description"=>"Update access control of the default role access list",
-            "is_visible"=>true,
-            "is_allow"=>false
-        ])->name('.update-default-role-access-list');
+        Route::post('update-default-role-access-list/{role_id}', [XcontrolAccessDefaultController::class, 'update_allow_role_access'])
+            ->defaults("_description", "Update access control of the default role access list")
+            ->defaults("_is_visible", true)
+            ->defaults("_is_allow", false)
+            ->name('.update-default-role-access-list');
 
-        Route::get('check-gate/{access_name}', [ "uses"=>function(Request $request, $access_name){
+        Route::get('check-gate/{access_name}', function(Request $request, $access_name){
                 return [
                     "name"=>$access_name,
                     "is_allow"=>auth()->user()->can($access_name)
                 ];
-            },
-            "description"=>"Control Access gate checker",
-            "is_visible"=>true,
-            "is_allow"=>false
-        ])->name('.gate');
+            })
+            ->defaults("_description", "Control Access gate checker")
+            ->defaults("_is_visible", true)
+            ->defaults("_is_allow", false)
+            ->name('.gate');
 
     });
 

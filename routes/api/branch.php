@@ -7,56 +7,49 @@ use iProtek\Core\Helpers\PayHttp;
 
 Route::prefix('branch')->name('.branch')->group(function(){
 
-    Route::get('/active-list', [ 
-        "uses"=> [XbranchController::class, 'active_branch_list'],
-        "description"=>"List of Active Branches",
-        "is_visible"=>true,
-        "is_allow"=>false
-     ])->name('.active-list');
+    Route::get('/active-list', [XbranchController::class, 'active_branch_list'])
+        ->defaults("_description", "List of Active Branches")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.active-list');
 
-    Route::post('/select-branch', [ 
-        "uses"=>[XbranchController::class, 'select_branch'],
-        "description"=>"Branch Selection",
-        "is_visible"=>true,
-        "is_allow"=>false
-    ])->name('.select');
+    Route::post('/select-branch', [XbranchController::class, 'select_branch'])
+        ->defaults("_description", "Branch Selection")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.select');
 
-    Route::get('/list', [ 
-        "uses"=>[XbranchController::class, 'branch_list'],
-        "description"=>"Branch List",
-        "is_visible"=>true,
-        "is_allow"=>false
-    ])->name('.list');
+    Route::get('/list', [XbranchController::class, 'branch_list'])
+        ->defaults("_description", "Branch List")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.list');
 
     //SYNC BRANCHLIST
-    Route::get('/sync-branches', [
-        "uses"=>[XbranchController::class, 'sync_branch_list'],
-        "description"=>"Synchronize Branches centralize controls",
-        "is_visible"=>true,
-        "is_allow"=>false
-    ])->name('.sync-branches');
+    Route::get('/sync-branches', [XbranchController::class, 'sync_branch_list'])
+        ->defaults("_description", "Synchronize Branches centralize controls")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.sync-branches');
 
     //ADD & SYNC
-    Route::post('/sync-add', [
-        "uses"=>[XbranchController::class, 'sync_add'],
-        "description"=>"Add Branch from centralize controls",
-        "is_visible"=>true,
-        "is_allow"=>false
-    ])->name('.add');
+    Route::post('/sync-add', [XbranchController::class, 'sync_add'])
+        ->defaults("_description", "Add Branch from centralize controls")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.add');
 
     //UPDATE & SYNC
-    Route::post('/sync-update', [
-        "uses"=>[XbranchController::class, 'sync_update'],
-        "description"=>"Update branches from centralize controls",
-        "is_visible"=>true,
-        "is_allow"=>false
-    ])->name('.sync-update');
+    Route::post('/sync-update', [XbranchController::class, 'sync_update'])
+        ->defaults("_description", "Update branches from centralize controls")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.sync-update');
 
     //REMOVE & SYNC
-    Route::post('/sync-remove', [
-        "uses"=>[XbranchController::class, 'sync_remove'],
-        "description"=>"Remove Branch from centralize controls",
-        "is_visible"=>true,
-        "is_allow"=>false
-    ])->name('.sync-remove');
+    Route::post('/sync-remove', [XbranchController::class, 'sync_remove'])
+        ->defaults("_description", "Remove Branch from centralize controls")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.sync-remove');
 });

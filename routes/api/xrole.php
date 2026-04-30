@@ -8,25 +8,23 @@ use Illuminate\Support\Facades\DB;
 
 Route::prefix('xrole')->name('.xrole')->group(function(){
 
-    Route::middleware(['can:menu-xrole'])->get('/', [ 
-        "uses"=>[ XroleController::class, 'index'],
-        "description"=>"Role Index View",
-        "is_visible"=>true,
-        "is_allow"=>false
-    ])->name('.index');
+    Route::middleware(['can:menu-xrole'])->get('/', [ XroleController::class, 'index'])
+        ->defaults("_description", "Role Index View")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.index');
 
-    Route::middleware(['can:menu-xrole'])->get('/user-role-access', [ 
-        "uses"=> [ XroleController::class, 'user_role_access'],
-        "is_visible"=>true,
-        "is_allow"=>false
-    ])->name('.user-role-access');
-    
-    Route::get('/shared-account-list',[ 
-        "uses"=>function(Request $request){return XracPayHttp::app_user_account("", 1, 10);},
-        "description"=>"list of account that has access",
-        "is_visible"=>true,
-        "is_allow"=>false
-    ])->name('.shared-account-list');
+    Route::middleware(['can:menu-xrole'])->get('/user-role-access', [ XroleController::class, 'user_role_access'])
+        ->defaults("_description", "User Role Access")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.user-role-access');
+
+    Route::get('/shared-account-list', function(Request $request){return XracPayHttp::app_user_account("", 1, 10);})
+        ->defaults("_description", "list of account that has access")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.shared-account-list');
 
     /*
     Route::get('/send-invite', function(Request $request){
@@ -34,17 +32,16 @@ Route::prefix('xrole')->name('.xrole')->group(function(){
     })->name('.send-invite');
     */
 
-    Route::get('menus', [
-        "uses"=>function(Request $request){
+    Route::get('menus', function(Request $request){
             return DB::table('sys_sidemenu_items')->get();
-        },
-        "description"=>"Menu List",
-        "is_visible"=>true,
-        "is_allow"=>false
-    ])->name('.menus');
+        })
+        ->defaults("_description", "Menu List")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.menus');
 
 
-    Route::get('role-menus/{role_id}', [ "uses"=> function(Request $request, $role_id = 0){
+    Route::get('role-menus/{role_id}', function(Request $request, $role_id = 0){
             $role_menus = [];
             if(!$request->role_id)return;
 
@@ -63,14 +60,14 @@ Route::prefix('xrole')->name('.xrole')->group(function(){
 
             }
             return $role_menus;
-        },
-        "description"=>"Role Menu List",
-        "is_visible"=>true,
-        "is_allow"=>false
-    ])->name('.role-menu');
+        })
+        ->defaults("_description", "Role Menu List")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.role-menu');
 
 
-    Route::post('update-role-menu/{role_id}', [ "uses"=> function(Request $request, $role_id){
+    Route::post('update-role-menu/{role_id}', function(Request $request, $role_id){
 
             if(!$role_id || $role_id == "0") return;
 
@@ -97,22 +94,21 @@ Route::prefix('xrole')->name('.xrole')->group(function(){
             }
 
             return ["status"=>1, "message"=>"Successfully updated."];
-        },
-        "description"=>"Update the menu of the role",
-        "is_visible"=>true,
-        "is_allow"=>false
-    ])->name('.update-menu');
+        })
+        ->defaults("_description", "Update the menu of the role")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.update-menu');
 
 
-    Route::get('/account-list', [ "uses"=>function(Request $request){
+    Route::get('/account-list', function(Request $request){
             $page = $request->page ?: 1;
             $exact = $request->exact ?: "";
             return  XracPayHttp::app_accounts($request->search, $page, 10, $exact);
-        },
-        "description"=>"List of account",
-        "is_visible"=>true,
-        "is_allow"=>false
-    ]
-    )->name('.account-list');
+        })
+        ->defaults("_description", "List of account")
+        ->defaults("_is_visible", true)
+        ->defaults("_is_allow", false)
+        ->name('.account-list');
 
 });
