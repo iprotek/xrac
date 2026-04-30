@@ -13,21 +13,21 @@ use \iProtek\Xrac\Helpers\XracHelper;
                 return XracHelper::getControlAccess();
             },
             "description"=>"List of control access",
-            "is_visible"=>false,
+            "is_visible"=>true,
             "is_allow"=>false
         ])->name('.list');
 
         Route::get('allowed-default-role-list/{role_id}', [
             "uses"=>[XcontrolAccessDefaultController::class, 'allow_role_access_list'],
             "description"=>"Control Access that has Default allowed role list",
-            "is_visible"=>false,
+            "is_visible"=>true,
             "is_allow"=>false
         ])->name('.role-list');
 
         Route::post('update-default-role-access-list/{role_id}', [
             "uses"=>[XcontrolAccessDefaultController::class, 'update_allow_role_access'],
             "description"=>"Update access control of the default role access list",
-            "is_visible"=>false,
+            "is_visible"=>true,
             "is_allow"=>false
         ])->name('.update-default-role-access-list');
 
@@ -36,10 +36,9 @@ use \iProtek\Xrac\Helpers\XracHelper;
                     "name"=>$access_name,
                     "is_allow"=>auth()->user()->can($access_name)
                 ];
-
             },
             "description"=>"Control Access gate checker",
-            "is_visible"=>false,
+            "is_visible"=>true,
             "is_allow"=>false
         ])->name('.gate');
 

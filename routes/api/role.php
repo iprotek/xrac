@@ -9,21 +9,21 @@ Route::prefix('role')->name('.role')->group(function(){
     Route::get('/active-list', [ 
         "uses"=>[ XroleController::class, 'active_role_list'],
         "description"=>"List of active roles",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.active-role-list');
 
     Route::post('/select-branch', [ 
         "uses"=>[ XroleController::class, 'select_branch'],
         "description"=>"Branch selection in a role area",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.select-branch');
 
     Route::get('/list', [ 
         "uses"=>[XroleController::class, 'role_list'],
         "description"=>"Role list",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.list');
 
@@ -31,7 +31,7 @@ Route::prefix('role')->name('.role')->group(function(){
     Route::get('/sync-roles', [ 
         "uses"=>[XroleController::class, 'sync_role_list'],
         "description"=>"Get role list from sync",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.sync-role');
 
@@ -39,7 +39,7 @@ Route::prefix('role')->name('.role')->group(function(){
     Route::post('/sync-add', [ 
         "uses"=>[XroleController::class, 'sync_add'],
         "description"=>"Sync add role",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.sync-add');
 
@@ -47,7 +47,7 @@ Route::prefix('role')->name('.role')->group(function(){
     Route::post('/sync-update', [
         "uses"=>[XroleController::class, 'sync_update'],
         "description"=>"Sync update role",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.sync-update');
 
@@ -55,7 +55,7 @@ Route::prefix('role')->name('.role')->group(function(){
     Route::post('/sync-remove', [
         "uses"=>[XroleController::class, 'sync_remove'],
         "description"=>"Sync remove role",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.sync-remove');
 });

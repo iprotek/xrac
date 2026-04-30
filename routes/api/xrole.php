@@ -11,20 +11,20 @@ Route::prefix('xrole')->name('.xrole')->group(function(){
     Route::middleware(['can:menu-xrole'])->get('/', [ 
         "uses"=>[ XroleController::class, 'index'],
         "description"=>"Role Index View",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.index');
 
     Route::middleware(['can:menu-xrole'])->get('/user-role-access', [ 
         "uses"=> [ XroleController::class, 'user_role_access'],
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.user-role-access');
     
     Route::get('/shared-account-list',[ 
         "uses"=>function(Request $request){return XracPayHttp::app_user_account("", 1, 10);},
         "description"=>"list of account that has access",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.shared-account-list');
 
@@ -39,7 +39,7 @@ Route::prefix('xrole')->name('.xrole')->group(function(){
             return DB::table('sys_sidemenu_items')->get();
         },
         "description"=>"Menu List",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.menus');
 
@@ -65,7 +65,7 @@ Route::prefix('xrole')->name('.xrole')->group(function(){
             return $role_menus;
         },
         "description"=>"Role Menu List",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.role-menu');
 
@@ -99,7 +99,7 @@ Route::prefix('xrole')->name('.xrole')->group(function(){
             return ["status"=>1, "message"=>"Successfully updated."];
         },
         "description"=>"Update the menu of the role",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ])->name('.update-menu');
 
@@ -110,7 +110,7 @@ Route::prefix('xrole')->name('.xrole')->group(function(){
             return  XracPayHttp::app_accounts($request->search, $page, 10, $exact);
         },
         "description"=>"List of account",
-        "is_visible"=>false,
+        "is_visible"=>true,
         "is_allow"=>false
     ]
     )->name('.account-list');
