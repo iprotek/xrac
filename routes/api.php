@@ -29,6 +29,9 @@ Route::prefix('api')->middleware('api')->name('api')->group(function(){
 
         //XROLE
         include(__DIR__.'/api/xrole.php'); 
+        
+        //XROLE
+        include(__DIR__.'/api/policy-control.php'); 
       
       });
 
