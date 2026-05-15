@@ -10,10 +10,9 @@ use iProtek\SmsSender\Http\Controllers\SmsClientApiRequestLinkController;
   //  Route::get('/', [SmsController::class, 'index'])->name('.index');
 //});
 Route::prefix('api')->middleware('api')->name('api')->group(function(){ 
+ 
 
-    Route::prefix('xrac')->name('.xrac')->group(function(){
-
-      Route::prefix('group/{group_id}')->middleware(['pay.api', 'policy.control'])->group(function(){ 
+      Route::prefix('group/{group_id}/xrac')->middleware(['pay.api', 'policy.control'])->name('.xrac')->group(function(){ 
       
         //BRANCH
         include(__DIR__.'/api/branch.php'); 
@@ -32,8 +31,6 @@ Route::prefix('api')->middleware('api')->name('api')->group(function(){
         
         //XROLE
         include(__DIR__.'/api/policy-control.php'); 
-      
-      });
 
     });
   
